@@ -1,26 +1,36 @@
-name               := "ScissDSP"
-version            := "1.2.3-SNAPSHOT"
+lazy val baseName  = "ScissDSP"
+lazy val baseNameL = baseName.toLowerCase
+
+lazy val projectVersion = "1.2.3"
+lazy val mimaVersion    = "1.2.1"
+
+name               := baseName
+version            := projectVersion
 organization       := "de.sciss"
 description        := "Collection of DSP algorithms and components for Scala"
-homepage           := Some(url("https://github.com/Sciss/" + name.value))
+homepage           := Some(url(s"https://github.com/Sciss/${name.value}"))
 licenses           := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt"))
 scalaVersion       := "2.11.8"
-crossScalaVersions := Seq("2.11.8", "2.10.6")
+crossScalaVersions := Seq("2.12.1", "2.11.8", "2.10.6")
+
+mimaPreviousArtifacts := Set("de.sciss" %% baseNameL % mimaVersion)
 
 libraryDependencies ++= Seq(
   "net.sourceforge.jtransforms" %  "jtransforms"    % "2.4.0",
-  "de.sciss"                    %% "serial"         % "1.0.2",
-  "org.scalatest"               %% "scalatest"      % "3.0.0" % "test",
-  "de.sciss"                    %% "scalaaudiofile" % "1.4.5" % "test"
+  "de.sciss"                    %% "serial"         % "1.0.3",
+  "org.scalatest"               %% "scalatest"      % "3.0.1" % "test",
+  "de.sciss"                    %% "scalaaudiofile" % "1.4.6" % "test"
 )
 
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfuture", "-encoding", "utf8")
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfuture", "-encoding", "utf8", "-Xlint")
 
 initialCommands in console := """
   |import de.sciss.dsp._
   |def randomSignal( size: Int = 128 ) = Array.fill( size )( util.Random.nextFloat() * 2 - 1 )""".stripMargin
 
 // ---- build info ----
+
+enablePlugins(BuildInfoPlugin)
 
 buildInfoKeys := Seq(name, organization, version, scalaVersion, description,
   BuildInfoKey.map(homepage) { case (k, opt)           => k -> opt.get },
