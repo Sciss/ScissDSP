@@ -5,7 +5,7 @@
 
 ## statement
 
-ScissDSP is a collection of Digital Signal Processing (DSP) components for the Scala programming language. It is (C)opyright 2001&ndash;2017 by Hanns Holger Rutz. All rights reserved.
+ScissDSP is a collection of Digital Signal Processing (DSP) components for the Scala programming language. It is (C)opyright 2001&ndash;2018 by Hanns Holger Rutz. All rights reserved.
 
 ScissDSP is released under the [GNU Lesser General Public License](http://github.com/Sciss/ScissDSP/blob/master/licenses/ScissDSP-License.txt) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`.
 
@@ -13,7 +13,7 @@ For project status, API and current version, visit [github.com/Sciss/ScissDSP](h
 
 ## building
 
-This project compiles with sbt 0.13 against Scala 2.12, 2.11, 2.10. It depends on [JTransforms](https://sites.google.com/site/piotrwendykier/software/jtransforms) for the FFT. JTransforms provides three licenses (MPL/LGPL/GPL) and is incorporated here based on the GNU LGPL.
+This project compiles with sbt against Scala 2.12, 2.11. It depends on [JTransforms](https://sites.google.com/site/piotrwendykier/software/jtransforms) for the FFT. JTransforms provides three licenses (MPL/LGPL/GPL) and is incorporated here based on the GNU LGPL.
 
 ## linking
 

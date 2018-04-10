@@ -1,8 +1,8 @@
 lazy val baseName  = "ScissDSP"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "1.2.3"
-lazy val mimaVersion    = "1.2.1"
+lazy val projectVersion = "1.3.0-SNAPSHOT"
+lazy val mimaVersion    = "1.3.0"
 
 name               := baseName
 version            := projectVersion
@@ -10,16 +10,16 @@ organization       := "de.sciss"
 description        := "Collection of DSP algorithms and components for Scala"
 homepage           := Some(url(s"https://github.com/Sciss/${name.value}"))
 licenses           := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt"))
-scalaVersion       := "2.11.8"
-crossScalaVersions := Seq("2.12.1", "2.11.8", "2.10.6")
+scalaVersion       := "2.12.5"
+crossScalaVersions := Seq("2.12.5", "2.11.12")
 
 mimaPreviousArtifacts := Set("de.sciss" %% baseNameL % mimaVersion)
 
 libraryDependencies ++= Seq(
   "net.sourceforge.jtransforms" %  "jtransforms"    % "2.4.0",
-  "de.sciss"                    %% "serial"         % "1.0.3",
-  "org.scalatest"               %% "scalatest"      % "3.0.1" % "test",
-  "de.sciss"                    %% "scalaaudiofile" % "1.4.6" % "test"
+  "de.sciss"                    %% "serial"         % "1.1.0-SNAPSHOT",
+  "org.scalatest"               %% "scalatest"      % "3.0.5" % "test",
+  "de.sciss"                    %% "scalaaudiofile" % "1.5.0-SNAPSHOT" % "test"
 )
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfuture", "-encoding", "utf8", "-Xlint")
