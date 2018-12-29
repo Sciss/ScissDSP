@@ -1,7 +1,7 @@
 lazy val baseName  = "ScissDSP"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "1.3.1-SNAPSHOT"
+lazy val projectVersion = "1.3.1"
 lazy val mimaVersion    = "1.3.0"
 
 lazy val deps = new {
@@ -11,7 +11,7 @@ lazy val deps = new {
   }
   val test = new {
     val scalaTest   = "3.0.5"
-    val audioFile   = "1.5.1-SNAPSHOT"
+    val audioFile   = "1.5.1"
   }
 }
 
