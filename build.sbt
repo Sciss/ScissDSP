@@ -1,7 +1,7 @@
 lazy val baseName  = "ScissDSP"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "1.3.1"
+lazy val projectVersion = "1.3.2"
 lazy val mimaVersion    = "1.3.0"
 
 lazy val deps = new {
@@ -10,8 +10,8 @@ lazy val deps = new {
     val serial      = "1.1.1"
   }
   val test = new {
-    val scalaTest   = "3.0.5"
-    val audioFile   = "1.5.1"
+    val scalaTest   = "3.0.8-RC2"
+    val audioFile   = "1.5.3"
   }
 }
 
@@ -24,8 +24,8 @@ lazy val root = project.withId(baseNameL).in(file("."))
     description        := "Collection of DSP algorithms and components for Scala",
     homepage           := Some(url(s"https://git.iem.at/sciss/${name.value}")),
     licenses           := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")),
-    scalaVersion       := "2.13.0-M5",
-    crossScalaVersions := Seq("2.12.8", "2.11.12", "2.13.0-M5"),
+    scalaVersion       := "2.12.8",
+    crossScalaVersions := Seq("2.12.8", "2.11.12", "2.13.0-RC1"),
     mimaPreviousArtifacts := Set("de.sciss" %% baseNameL % mimaVersion),
     libraryDependencies ++= Seq(
       "net.sourceforge.jtransforms" %  "jtransforms"    % deps.main.jtransforms,
@@ -33,10 +33,9 @@ lazy val root = project.withId(baseNameL).in(file("."))
       "de.sciss"                    %% "audiofile"      % deps.test.audioFile % Test
     ),
     libraryDependencies += {
-      val v = if (scalaVersion.value == "2.13.0-M5") "3.0.6-SNAP5" else deps.test.scalaTest
-      "org.scalatest"               %% "scalatest"      % v % Test
+      "org.scalatest"               %% "scalatest"      % deps.test.scalaTest % Test
     },
-    scalacOptions in (Compile, compile) ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfuture", "-encoding", "utf8", "-Xlint"),
+    scalacOptions in (Compile, compile) ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
     initialCommands in console := 
       """import de.sciss.dsp._
         |def randomSignal(size: Int = 128) = Array.fill(size)(util.Random.nextFloat() * 2 - 1)""".stripMargin,

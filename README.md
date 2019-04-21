@@ -6,7 +6,7 @@
 ## statement
 
 ScissDSP is a collection of Digital Signal Processing (DSP) components for the Scala programming language. It
-is (C)opyright 2001&ndash;2018 by Hanns Holger Rutz. All rights reserved.
+is (C)opyright 2001&ndash;2019 by Hanns Holger Rutz. All rights reserved.
 
 ScissDSP is released under the [GNU Lesser General Public License](https://git.iem.at/sciss/ScissDSP/raw/master/LICENSE)
 and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`.
@@ -25,7 +25,7 @@ The following artifact is necessary as dependency:
 
     libraryDependencies += "de.sciss" %% "scissdsp" % v
 
-The current version `v` is `"1.3.1"`
+The current version `v` is `"1.3.2"`
 
 ## contributing
 
