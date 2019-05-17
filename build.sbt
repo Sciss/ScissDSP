@@ -25,7 +25,7 @@ lazy val root = project.withId(baseNameL).in(file("."))
     homepage           := Some(url(s"https://git.iem.at/sciss/${name.value}")),
     licenses           := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")),
     scalaVersion       := "2.12.8",
-    crossScalaVersions := Seq("2.12.8", "2.11.12", "2.13.0-RC1"),
+    crossScalaVersions := Seq("2.12.8", "2.11.12", "2.13.0-RC2"),
     mimaPreviousArtifacts := Set("de.sciss" %% baseNameL % mimaVersion),
     libraryDependencies ++= Seq(
       "net.sourceforge.jtransforms" %  "jtransforms"    % deps.main.jtransforms,
@@ -33,7 +33,11 @@ lazy val root = project.withId(baseNameL).in(file("."))
       "de.sciss"                    %% "audiofile"      % deps.test.audioFile % Test
     ),
     libraryDependencies += {
-      "org.scalatest"               %% "scalatest"      % deps.test.scalaTest % Test
+      if (scalaVersion.value == "2.13.0-RC2") {
+        "org.scalatest" % "scalatest_2.13.0-RC1" % deps.test.scalaTest % Test
+      } else {
+        "org.scalatest" %% "scalatest" % deps.test.scalaTest % Test
+      }
     },
     scalacOptions in (Compile, compile) ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
     initialCommands in console := 
