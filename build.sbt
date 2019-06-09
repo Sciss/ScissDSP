@@ -10,7 +10,7 @@ lazy val deps = new {
     val serial      = "1.1.1"
   }
   val test = new {
-    val scalaTest   = "3.0.8-RC2"
+    val scalaTest   = "3.0.8-RC5"
     val audioFile   = "1.5.3"
   }
 }
@@ -25,7 +25,7 @@ lazy val root = project.withId(baseNameL).in(file("."))
     homepage           := Some(url(s"https://git.iem.at/sciss/${name.value}")),
     licenses           := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")),
     scalaVersion       := "2.12.8",
-    crossScalaVersions := Seq("2.12.8", "2.11.12", "2.13.0-RC2"),
+    crossScalaVersions := Seq("2.12.8", "2.11.12", "2.13.0"),
     mimaPreviousArtifacts := Set("de.sciss" %% baseNameL % mimaVersion),
     libraryDependencies ++= Seq(
       "net.sourceforge.jtransforms" %  "jtransforms"    % deps.main.jtransforms,
@@ -33,8 +33,8 @@ lazy val root = project.withId(baseNameL).in(file("."))
       "de.sciss"                    %% "audiofile"      % deps.test.audioFile % Test
     ),
     libraryDependencies += {
-      if (scalaVersion.value == "2.13.0-RC2") {
-        "org.scalatest" % "scalatest_2.13.0-RC1" % deps.test.scalaTest % Test
+      if (scalaVersion.value == "2.13.0") {
+        "org.scalatest" % "scalatest_2.13.0-RC3" % deps.test.scalaTest % Test
       } else {
         "org.scalatest" %% "scalatest" % deps.test.scalaTest % Test
       }

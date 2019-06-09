@@ -15,7 +15,7 @@ For project status, API and current version, visit [git.iem.at/sciss/ScissDSP](h
 
 ## building
 
-This project compiles with sbt against Scala 2.12, 2.11. It depends
+This project compiles with sbt against Scala 2.13, 2.12, 2.11. It depends
 on [JTransforms](https://sites.google.com/site/piotrwendykier/software/jtransforms) for the FFT. JTransforms provides 
 three licenses (MPL/LGPL/GPL) and is incorporated here based on the GNU LGPL.
 
