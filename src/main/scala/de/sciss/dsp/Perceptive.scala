@@ -2,7 +2,7 @@
  * Perceptive.scala
  * (ScissDSP)
  *
- * Copyright (c) 2001-2018 Hanns Holger Rutz. All rights reserved.
+ * Copyright (c) 2001-2020 Hanns Holger Rutz. All rights reserved.
  *
  * This software is published under the GNU Lesser General Public License v2.1+
  *
@@ -42,7 +42,8 @@ object Perceptive {
     * @param	num					Zahl der Gewichte resp. Frequenzen
     */
   def calcDBAweights(weights: Array[Float], freq: Array[Float], num: Int): Unit = {
-    var i = 0; while (i < num) {
+    var i = 0
+    while (i < num) {
       val f = freq(i)
       weights(i) = if (f < 1.0f) {
         dBAweight(0)
@@ -54,6 +55,7 @@ object Perceptive {
         val f3 = f2 % 1.0f
         dBAweight(j) * (1.0f - f3) + dBAweight(j + 1) * f3 // ? XXX
       }
-    i += 1 }
+      i += 1
+    }
   }
 }

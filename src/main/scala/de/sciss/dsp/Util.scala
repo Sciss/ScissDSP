@@ -2,7 +2,7 @@
  * Util.scala
  * (ScissDSP)
  *
- * Copyright (c) 2001-2018 Hanns Holger Rutz. All rights reserved.
+ * Copyright (c) 2001-2020 Hanns Holger Rutz. All rights reserved.
  *
  * This software is published under the GNU Lesser General Public License v2.1+
  *
@@ -18,12 +18,12 @@ package de.sciss.dsp
   */
 object Util {
   /** 2 * Pi (Outline of the unit circle) */
-	val Pi2  = math.Pi * 2
+  val Pi2  = math.Pi * 2
 
-	/** logarithmus naturalis of 2 */
-	val Ln2  = math.log( 2 )
-	/** logarithmus naturalis of 10 */
-	val Ln10 = math.log( 10 )
+  /** logarithmus naturalis of 2 */
+  val Ln2  = math.log( 2 )
+  /** logarithmus naturalis of 10 */
+  val Ln10 = math.log( 10 )
 
   /** Decibel-to-Linear conversion.
     *

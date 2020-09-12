@@ -2,7 +2,7 @@
  * Window.scala
  * (ScissDSP)
  *
- * Copyright (c) 2001-2018 Hanns Holger Rutz. All rights reserved.
+ * Copyright (c) 2001-2020 Hanns Holger Rutz. All rights reserved.
  *
  * This software is published under the GNU Lesser General Public License v2.1+
  *
@@ -13,12 +13,13 @@
 
 package de.sciss.dsp
 
-import collection.immutable.{IndexedSeq => Vec}
-import annotation.switch
+import scala.annotation.switch
+import scala.collection.immutable.{IndexedSeq => Vec}
 
 object Window {
-   import math.Pi
-   import Util.Pi2
+  import Util.Pi2
+
+  import math.Pi
 
   def apply(id: Int, param: Double = 0.0): Window = (id: @switch) match {
     case 0 => Hamming
@@ -44,10 +45,14 @@ object Window {
     def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
       val win         = if (a == null) new Array[Float](len) else a
       val normFactor  = Pi2 / len
-      var i = 0; var j = off; while (i < len) {
+      var i = 0
+      var j = off
+      while (i < len) {
         val d  = i * normFactor + Pi
         win(j) = (0.54 + 0.46 * math.cos(d)).toFloat
-      i += 1; j += 1 }
+        i += 1
+        j += 1
+      }
       win
     }
   }
@@ -58,10 +63,14 @@ object Window {
     def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
       val win         = if (a == null) new Array[Float](len) else a
       val normFactor  = Pi2 / len
-      var i = 0; var j = off; while (i < len) {
+      var i = 0
+      var j = off
+      while (i < len) {
         val d  = i * normFactor + Pi
         win(j) = (0.42 + 0.5 * math.cos(d) + 0.08 * math.cos(2 * d)).toFloat
-      i += 1; j += 1 }
+        i += 1
+        j += 1
+      }
       win
     }
   }
@@ -90,10 +99,14 @@ object Window {
       val win         = if (a == null) new Array[Float](len) else a
       val normFactor  = 2.0 / len
       val iBeta       = 1.0 / calcBesselZero(beta)
-      var i = 0; var j = off; while (i < len) {
+      var i = 0
+      var j = off
+      while (i < len) {
         val d = i * normFactor - 1
         win(j) = (calcBesselZero(beta * math.sqrt(1.0 - d * d)) * iBeta).toFloat
-      i += 1; j += 1 }
+        i += 1
+        j += 1
+      }
 
       win
     }
@@ -109,7 +122,9 @@ object Window {
 
     def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
       val win = if (a == null) new Array[Float](len) else a
-      val stop = off + len; var j = off; while (j < stop) {
+      val stop = off + len
+      var j = off
+      while (j < stop) {
         win(j) = 1f
         j += 1
       }
@@ -123,10 +138,14 @@ object Window {
     def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
       val win         = if (a == null) new Array[Float](len) else a
       val normFactor  = Pi2 / len
-      var i = 0; var j = off; while (i < len) {
+      var i = 0
+      var j = off
+      while (i < len) {
         val d = i * normFactor + Pi
         win(j) = (0.5 + 0.5 * math.cos(d)).toFloat
-      i += 1; j += 1 }
+        i += 1
+        j += 1
+      }
       win
     }
   }
@@ -137,10 +156,14 @@ object Window {
     def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
       val win         = if (a == null) new Array[Float](len) else a
       val normFactor  = 2.0 / len
-      var i = 0; var j = off; while (j < len) {
+      var i = 0
+      var j = off
+      while (j < len) {
         val d = i * normFactor - 1
         win(j) = (1.0 - math.abs(d)).toFloat
-      i += 1; j += 1 }
+        i += 1
+        j += 1
+      }
       win
     }
   }
@@ -151,12 +174,14 @@ object Window {
     var n   = 1
     val xh  = x * 0.5
 
-    do {
+    while ({
       val d1 = xh / n
       n += 1
       d2 *= d1 * d1
       sum += d2
-    } while (d2 >= sum * 1e-21) // precision is 20 decimal digits
+
+      (d2 >= sum * 1e-21) // precision is 20 decimal digits
+    }) ()
 
     sum
   }

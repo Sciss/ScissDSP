@@ -2,7 +2,7 @@
  * ConstQ.scala
  * (ScissDSP)
  *
- * Copyright (c) 2001-2018 Hanns Holger Rutz. All rights reserved.
+ * Copyright (c) 2001-2020 Hanns Holger Rutz. All rights reserved.
  *
  * This software is published under the GNU Lesser General Public License v2.1+
  *
@@ -163,14 +163,18 @@ object ConstQ {
       //System.out.println( "inOff " + inOff + "; num  " + num + " ; inOff + num " + (inOff + num) + "; input.length " + input.length + "; fftBuffer.length " + fftBuffer.length );
 
       System.arraycopy(input, inOff, fftBuffer, off, num)
-      var i = off + num; while (i < fftSize) {
+      var i = off + num
+      while (i < fftSize) {
         fftBuffer(i) = 0f
-   		i += 1 }
+        i += 1
+      }
       val num2 = math.min(fftSize - num, inLen - num)
       System.arraycopy(input, inOff + num, fftBuffer, 0, num2)
-   		i = num2; while (i < off) {
+      i = num2
+      while (i < off) {
         fftBuffer(i) = 0f
-   		i += 1 }
+        i += 1
+      }
 
       // XXX evtl., wenn inpWin weggelassen werden kann,
       // optimierte overlap-add fft
@@ -262,7 +266,8 @@ object ConstQ {
 
     //		System.out.println( "cqKernelNum = " + cqKernelNum + "; maxKernLen = " + maxKernLen + "; fftSize = " + fftSize + "; threshSqr " + threshSqr );
 
-    var k = 0; while (k < numKernels) {
+    var k = 0
+    while (k < numKernels) {
       val theorKernLen  = maxKernLen * math.pow(2, (-k).toDouble / config.bandsPerOct) // toFloat
       val kernelLen     = math.min(fftSize, math.ceil(theorKernLen).toInt)
       val kernelLenE    = kernelLen & ~1
@@ -278,16 +283,19 @@ object ConstQ {
       val weight        = 6 / ((theorKernLen + kernelLen) * fftSize)
       //			weight = 2 / ((theorKernLen + kernelLen) * Math.sqrt( fftSize ));
 
-			var m = kernelLenE; val n = fftSizeC - kernelLenE; while (m < n) {
+      var m = kernelLenE
+      val n = fftSizeC - kernelLenE
+      while (m < n) {
         fftBuf(m) = 0f
-			m += 1 }
+        m += 1
+      }
 
-			// note that we calculate the complex conjugation of
-			// the temporalKernal and reverse its time, so the resulting
-			// FFT can be immediately used for the convolution and does not
-			// need to be conjugated; this is due to the Fourier property
-			// h*(-x) <-> H*(f). time reversal is accomplished by
-			// having iteration variable j run....
+      // note that we calculate the complex conjugation of
+      // the temporalKernal and reverse its time, so the resulting
+      // FFT can be immediately used for the convolution and does not
+      // need to be conjugated; this is due to the Fourier property
+      // h*(-x) <-> H*(f). time reversal is accomplished by
+      // having iteration variable j run....
 
       // note: in the old FFT algorithm, there was a mistake, whereby complex input
       // data was already time reversed in the transform. this is corrected now.
@@ -295,7 +303,9 @@ object ConstQ {
       //			for( int i = kernelLen - 1, j = fftSizeC - kernelLenE; i >= 0; i-- ) { ... }
       //			for( int i = 0, j = 0; /* fftSizeC - kernelLenE; */ i < kernelLen; i++ ) { ... }
       //         var i = 0; var j = fftSizeC - kernelLenE; while( i < kernelLen ) {
-			var i = kernelLen - 1; var j = fftSizeC - kernelLenE; while (i >= 0) {
+      var i = kernelLen - 1
+      var j = fftSizeC - kernelLenE
+      while (i >= 0) {
         // complex exponential of a purely imaginary number
         // is cos( imag( n )) + i sin( imag( n ))
         val d1    = centerFreqN * i
@@ -308,15 +318,16 @@ object ConstQ {
         fftBuf(j) = (d2 * sin).toFloat; j += 1 // NORM!
         if (j == fftSizeC) j = 0
         //            i += 1 }
-			i -= 1 }
+        i -= 1
+      }
 
-			// XXX to be honest, i don't get the point
-			// of calculating the fft here, since we
-			// have an analytic description of the kernel
-			// function, it should be possible to calculate
-			// the spectral coefficients directly
-			// (the fft of a hamming is a gaussian,
-			// isn't it?)
+      // XXX to be honest, i don't get the point
+      // of calculating the fft here, since we
+      // have an analytic description of the kernel
+      // function, it should be possible to calculate
+      // the spectral coefficients directly
+      // (the fft of a hamming is a gaussian,
+      // isn't it?)
 
       //			Fourier.complexTransform( fftBuf, fftSize, Fourier.FORWARD )
 
@@ -327,14 +338,14 @@ object ConstQ {
       //val _test = _out.zipWithIndex.collect { case (f, i) if i % 2 == 0 => f }
       //println( _test.mkString( "[ ", ", ", " ]" ))
 
-			// with a "high" threshold like 0.0054, the
-			// point is _not_ to create a sparse matrix by
-			// gating the values. in fact we can locate
-			// the kernel spectrally, so all we need to do
-			// is to find the lower and upper frequency
-			// of the transformed kernel! that makes things
-			// a lot easier anyway since we don't need
-			// to employ a special sparse matrix library.
+      // with a "high" threshold like 0.0054, the
+      // point is _not_ to create a sparse matrix by
+      // gating the values. in fact we can locate
+      // the kernel spectrally, so all we need to do
+      // is to find the lower and upper frequency
+      // of the transformed kernel! that makes things
+      // a lot easier anyway since we don't need
+      // to employ a special sparse matrix library.
       val specStart = {
         var i = 0; var break = false; while (!break && i <= fftSize) {
           val f1      = fftBuf(i)
@@ -344,21 +355,21 @@ object ConstQ {
         }
         i
       }
-			// final matrix product:
-			// input chunk (fft'ed) is a row vector with n = fftSize
-			// kernel is a matrix mxn with m = fftSize, n = numKernels
-			// result is a row vector with = numKernels
-			// ; note that since the input is real and hence we
-			// calculate only the positive frequencies (up to pi),
-			// we might need to mirror the input spectrum to the
-			// negative frequencies. however it can be observed that
-			// for practically all kernels their frequency bounds
-			// lie in the positive side of the spectrum (only the
-			// high frequencies near nyquist blur across the pi boundary,
-			// and we will cut the overlap off by limiting specStop
-			// to fftSize instead of fftSize<<1 ...).
+      // final matrix product:
+      // input chunk (fft'ed) is a row vector with n = fftSize
+      // kernel is a matrix mxn with m = fftSize, n = numKernels
+      // result is a row vector with = numKernels
+      // ; note that since the input is real and hence we
+      // calculate only the positive frequencies (up to pi),
+      // we might need to mirror the input spectrum to the
+      // negative frequencies. however it can be observed that
+      // for practically all kernels their frequency bounds
+      // lie in the positive side of the spectrum (only the
+      // high frequencies near nyquist blur across the pi boundary,
+      // and we will cut the overlap off by limiting specStop
+      // to fftSize instead of fftSize<<1 ...).
 
-			val specStop = {
+      val specStop = {
         var i = specStart; var break = false; while (!break && i <= fftSize) {
           val f1      = fftBuf(i)
           val f2      = fftBuf(i + 1)
@@ -371,7 +382,8 @@ object ConstQ {
       //System.out.println( "Kernel k : specStart " + specStart + "; specStop " + specStop + "; centerFreq " + centerFreq );
       kernels(k) = new Kernel(specStart, new Array[Float](specStop - specStart), centerFreq.toFloat)
       System.arraycopy(fftBuf, specStart, kernels(k).data, 0, specStop - specStart)
-		k += 1 }
+      k += 1
+    }
 
     new Impl(config, kernels, fft, fftBuf)
   }

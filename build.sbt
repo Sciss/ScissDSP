@@ -1,17 +1,17 @@
 lazy val baseName  = "ScissDSP"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "1.3.2"
+lazy val projectVersion = "1.3.3"
 lazy val mimaVersion    = "1.3.0"
 
 lazy val deps = new {
   val main = new {
     val jtransforms = "2.4.0"
-    val serial      = "1.1.1"
+    val serial      = "1.1.3"
   }
   val test = new {
-    val scalaTest   = "3.0.8-RC5"
-    val audioFile   = "1.5.3"
+    val scalaTest   = "3.2.2"
+    val audioFile   = "1.5.5"
   }
 }
 
@@ -24,8 +24,8 @@ lazy val root = project.withId(baseNameL).in(file("."))
     description        := "Collection of DSP algorithms and components for Scala",
     homepage           := Some(url(s"https://git.iem.at/sciss/${name.value}")),
     licenses           := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")),
-    scalaVersion       := "2.12.8",
-    crossScalaVersions := Seq("2.12.8", "2.11.12", "2.13.0"),
+    scalaVersion       := "2.13.3",
+    crossScalaVersions := Seq("0.27.0-RC1", "2.13.3", "2.12.12"),
     mimaPreviousArtifacts := Set("de.sciss" %% baseNameL % mimaVersion),
     libraryDependencies ++= Seq(
       "net.sourceforge.jtransforms" %  "jtransforms"    % deps.main.jtransforms,
@@ -33,11 +33,7 @@ lazy val root = project.withId(baseNameL).in(file("."))
       "de.sciss"                    %% "audiofile"      % deps.test.audioFile % Test
     ),
     libraryDependencies += {
-      if (scalaVersion.value == "2.13.0") {
-        "org.scalatest" % "scalatest_2.13.0-RC3" % deps.test.scalaTest % Test
-      } else {
-        "org.scalatest" %% "scalatest" % deps.test.scalaTest % Test
-      }
+      "org.scalatest" %% "scalatest" % deps.test.scalaTest % Test
     },
     scalacOptions in (Compile, compile) ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
     initialCommands in console := 
