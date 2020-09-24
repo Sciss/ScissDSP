@@ -16,9 +16,9 @@ class SerializationSpec extends AnyFlatSpec with Matchers {
     cfg.threading   = Threading.Custom(3)
 
     val out         = DataOutput()
-    ConstQ.Config.Serializer.write(cfg, out)
+    ConstQ.Config.format.write(cfg, out)
     val in          = DataInput(out.toByteArray)
-    val houdini     = ConstQ.Config.Serializer.read(in)
+    val houdini     = ConstQ.Config.format.read(in)
 
     assert(cfg.build === houdini)
   }
@@ -35,9 +35,9 @@ class SerializationSpec extends AnyFlatSpec with Matchers {
     cfg.threading   = Threading.Custom(3)
 
     val out         = DataOutput()
-    MFCC.Config.Serializer.write(cfg, out)
+    MFCC.Config.format.write(cfg, out)
     val in          = DataInput(out.toByteArray)
-    val houdini     = MFCC.Config.Serializer.read(in)
+    val houdini     = MFCC.Config.format.read(in)
 
     assert(cfg.build === houdini)
   }

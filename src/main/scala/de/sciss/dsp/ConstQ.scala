@@ -53,7 +53,7 @@ object ConstQ {
 
     private final val COOKIE  = 0x4351
 
-    implicit object Serializer extends ConstFormat[Config] {
+    implicit object format extends ConstFormat[Config] {
       def write(v: Config, out: DataOutput): Unit = {
         import v._
         out.writeShort(COOKIE)
@@ -63,7 +63,7 @@ object ConstQ {
         out.writeFloat(maxTimeRes)
         out.writeShort(maxFFTSize)
         out.writeShort(bandsPerOct)
-        Threading.Serializer.write(threading, out)
+        Threading.format.write(threading, out)
       }
 
       def read(in: DataInput): Config = {
@@ -75,7 +75,7 @@ object ConstQ {
         val maxTimeRes  = in.readFloat()
         val maxFFTSize  = in.readShort()
         val bandsPerOct = in.readShort()
-        val threading   = Threading.Serializer.read(in)
+        val threading   = Threading.format.read(in)
         new ConfigImpl(sampleRate = sampleRate, minFreq = minFreq, maxFreq = maxFreq, maxTimeRes = maxTimeRes,
                        maxFFTSize = maxFFTSize, bandsPerOct = bandsPerOct, threading = threading)
       }
