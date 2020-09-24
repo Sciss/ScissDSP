@@ -1,13 +1,13 @@
 lazy val baseName  = "ScissDSP"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "1.3.3"
-lazy val mimaVersion    = "1.3.0"
+lazy val projectVersion = "2.0.0-SNAPSHOT"
+lazy val mimaVersion    = "2.0.0"
 
 lazy val deps = new {
   val main = new {
     val jtransforms = "2.4.0"
-    val serial      = "1.1.3"
+    val serial      = "2.0.0-SNAPSHOT"
   }
   val test = new {
     val scalaTest   = "3.2.2"

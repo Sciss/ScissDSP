@@ -13,7 +13,7 @@
 
 package de.sciss.dsp
 
-import de.sciss.serial.{ImmutableSerializer, DataOutput, DataInput}
+import de.sciss.serial.{ConstFormat, DataInput, DataOutput}
 
 import scala.language.implicitConversions
 
@@ -55,7 +55,7 @@ object MFCC {
 
     private final val COOKIE  = 0x4D45  // "ME"
 
-    implicit object Serializer extends ImmutableSerializer[Config] {
+    implicit object Serializer extends ConstFormat[Config] {
       def write(v: Config, out: DataOutput): Unit = {
         import v._
         out.writeShort(COOKIE)

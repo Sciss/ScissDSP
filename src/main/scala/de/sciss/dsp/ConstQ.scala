@@ -13,8 +13,9 @@
 
 package de.sciss.dsp
 
-import de.sciss.serial.{DataOutput, DataInput, ImmutableSerializer}
-import language.implicitConversions
+import de.sciss.serial.{ConstFormat, DataInput, DataOutput}
+
+import scala.language.implicitConversions
 
 object ConstQ {
 
@@ -52,7 +53,7 @@ object ConstQ {
 
     private final val COOKIE  = 0x4351
 
-    implicit object Serializer extends ImmutableSerializer[Config] {
+    implicit object Serializer extends ConstFormat[Config] {
       def write(v: Config, out: DataOutput): Unit = {
         import v._
         out.writeShort(COOKIE)

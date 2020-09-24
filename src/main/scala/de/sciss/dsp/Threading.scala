@@ -13,8 +13,9 @@
 
 package de.sciss.dsp
 
+import de.sciss.serial.{ConstFormat, DataInput, DataOutput}
 import edu.emory.mathcs.utils.ConcurrencyUtils
-import de.sciss.serial.{DataOutput, DataInput, ImmutableSerializer}
+
 import scala.annotation.switch
 
 object Threading {
@@ -23,7 +24,7 @@ object Threading {
   private final val ID_SINGLE = 1
   private final val ID_CUSTOM = 2
 
-  implicit object Serializer extends ImmutableSerializer[Threading] {
+  implicit object Serializer extends ConstFormat[Threading] {
     // don't worry about the exhaustiveness warning. seems to be SI-7298, to be fixed in Scala 2.10.2
     def write(v: Threading, out: DataOutput): Unit = {
       out.writeShort(COOKIE)
