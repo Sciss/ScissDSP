@@ -31,7 +31,7 @@ object FastLog {
 
     override def toString = s"FastLog(base=$base, q=$q)"
 
-    override def equals(that: Any) = that != null && that.isInstanceOf[FastLog] && {
+    override def equals(that: Any): Boolean = that != null && that.isInstanceOf[FastLog] && {
       val f = that.asInstanceOf[FastLog]
       f.base == base && f.q == q
     }
@@ -41,23 +41,23 @@ object FastLog {
     def q: Int = q0
 
     private val qM1   = q0 - 1
-    private val korr  = (Util.Ln2 / math.log(base0)).toFloat
+    private val korr  = Util.Ln2 / math.log(base0)
 
     private val data = {
       val tabSize = 1 << (24 - q0)
-      val arr     = new Array[Float](tabSize)
+      val arr     = new Array[Double](tabSize)
       var i = 0; while (i < tabSize) {
         // note: the -150 is to avoid this addition in the calculation
         // of the exponent (see the floatToRawIntBits doc).
-        arr(i) = (Util.log2(i << q0) - 150).toFloat
+        arr(i) = Util.log2(i << q0) - 150
         i += 1
       }
       arr
     }
 
-    def calc(arg: Float): Float = {
-      //		final int raw	= Float.floatToRawIntBits( x );
-      val raw       = java.lang.Float.floatToIntBits(arg)
+    def calc(arg: Double): Double = {
+      //		final int raw	= Double.floatToRawIntBits( x );
+      val raw       = java.lang.Float.floatToIntBits(arg.toFloat)
       val exp       = (raw >> 23) & 0xFF
       val mantissa  = raw & 0x7FFFFF
 
@@ -71,7 +71,7 @@ object FastLog {
   * "Revisiting a basic function on current CPUs: A fast logarithm implementation
   * with adjustable accuracy" (2007).
   *
-  * @see		java.lang.Float#floatToRawIntBits( float )
+  * @see		java.lang.Double#floatToRawIntBits( float )
   */
 sealed trait FastLog {
   def base: Double
@@ -83,5 +83,5 @@ sealed trait FastLog {
     * @param	arg	the argument. must be positive!
     * @return		log( x )
     */
-  def calc(arg: Float): Float
+  def calc(arg: Double): Double
 }

@@ -14,7 +14,7 @@
 package de.sciss.dsp
 
 object Perceptive {
-  private val dBAweight = Array[Float](
+  private val dBAweight = Array[Double](
     //		1 Hz		1.25		1.6			2			2.5			3.15
        0.0f,		1.000e-7f,	2.512e-7f,	6.310e-7f,	1.567e-6f,	3.890e-6f,
     //		4			5			6.3			8			10			12
@@ -41,7 +41,7 @@ object Perceptive {
     *                     die zugehoerigen Gewichtungen ueberschrieben!
     * @param	num					Zahl der Gewichte resp. Frequenzen
     */
-  def calcDBAweights(weights: Array[Float], freq: Array[Float], num: Int): Unit = {
+  def calcDBAweights(weights: Array[Double], freq: Array[Double], num: Int): Unit = {
     var i = 0
     while (i < num) {
       val f = freq(i)
@@ -50,7 +50,7 @@ object Perceptive {
       } else if (f > 31622.7f) {
         dBAweight(dBAweight.length - 1)
       } else {
-        val f2 = (10 * math.log10(f)).toFloat
+        val f2 = 10 * math.log10(f)
         val j  = f2.toInt
         val f3 = f2 % 1.0f
         dBAweight(j) * (1.0f - f3) + dBAweight(j + 1) * f3 // ? XXX

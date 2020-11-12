@@ -24,13 +24,13 @@ object ConstQ {
     def sampleRate: Double
 
     /** Lowest frequency in the logarithmic spectral, in Hertz. */
-    def minFreq: Float
+    def minFreq: Double
 
     /** Highest frequency in the logarithmic spectral, in Hertz. */
-    def maxFreq: Float
+    def maxFreq: Double
 
     /** Maximum temporal resolution in milliseconds. This resolution is achieved for high frequencies. */
-    def maxTimeRes: Float
+    def maxTimeRes: Double
 
     /** Maximum size of FFTs calculated. This constraints the actual bandwidth of the minimum frequency
       * spectral resolution. Even if the bands per octave and minimum frequency would suggest a higher
@@ -51,16 +51,16 @@ object ConstQ {
 
     def apply(): ConfigBuilder = new ConfigBuilderImpl
 
-    private final val COOKIE  = 0x4351
+    private final val COOKIE  = 0x4352
 
     implicit object format extends ConstFormat[Config] {
       def write(v: Config, out: DataOutput): Unit = {
         import v._
         out.writeShort(COOKIE)
         out.writeDouble(sampleRate)
-        out.writeFloat(minFreq)
-        out.writeFloat(maxFreq)
-        out.writeFloat(maxTimeRes)
+        out.writeDouble(minFreq)
+        out.writeDouble(maxFreq)
+        out.writeDouble(maxTimeRes)
         out.writeShort(maxFFTSize)
         out.writeShort(bandsPerOct)
         Threading.format.write(threading, out)
@@ -70,14 +70,14 @@ object ConstQ {
         val cookie = in.readShort()
         require(cookie == COOKIE, s"Unexpected cookie $cookie")
         val sampleRate  = in.readDouble()
-        val minFreq     = in.readFloat()
-        val maxFreq     = in.readFloat()
-        val maxTimeRes  = in.readFloat()
+        val minFreq     = in.readDouble()
+        val maxFreq     = in.readDouble()
+        val maxTimeRes  = in.readDouble()
         val maxFFTSize  = in.readShort()
         val bandsPerOct = in.readShort()
         val threading   = Threading.format.read(in)
-        new ConfigImpl(sampleRate = sampleRate, minFreq = minFreq, maxFreq = maxFreq, maxTimeRes = maxTimeRes,
-                       maxFFTSize = maxFFTSize, bandsPerOct = bandsPerOct, threading = threading)
+        ConfigImpl(sampleRate = sampleRate, minFreq = minFreq, maxFreq = maxFreq, maxTimeRes = maxTimeRes,
+          maxFFTSize = maxFFTSize, bandsPerOct = bandsPerOct, threading = threading)
       }
     }
   }
@@ -101,9 +101,9 @@ object ConstQ {
 
   sealed trait ConfigBuilder extends ConfigLike {
     var sampleRate: Double
-    var minFreq: Float
-    var maxFreq: Float
-    var maxTimeRes: Float
+    var minFreq: Double
+    var maxFreq: Double
+    var maxTimeRes: Double
     var maxFFTSize: Int
     var bandsPerOct: Int
     var threading: Threading
@@ -126,7 +126,7 @@ object ConstQ {
     def build: Config = ConfigImpl(sampleRate, minFreq, maxFreq, maxTimeRes, maxFFTSize, bandsPerOct, threading)
   }
 
-  private final case class ConfigImpl(sampleRate: Double, minFreq: Float, maxFreq: Float, maxTimeRes: Float,
+  private final case class ConfigImpl(sampleRate: Double, minFreq: Double, maxFreq: Double, maxTimeRes: Double,
                                       maxFFTSize: Int, bandsPerOct: Int, threading: Threading)
     extends Config {
 
@@ -134,12 +134,12 @@ object ConstQ {
   }
 
   /** Calculates the number of kernels resulting from a given setting. */
-  def getNumKernels(bandsPerOct: Int, maxFreq: Float, minFreq: Float): Int =
+  def getNumKernels(bandsPerOct: Int, maxFreq: Double, minFreq: Double): Int =
     math.ceil(bandsPerOct * Util.log2(maxFreq / minFreq)).toInt
 
   def apply(config: Config = Config().build): ConstQ = createInstance(config)
 
-  private final class Impl(val config: Config, kernels: Array[Kernel], val fft: Fourier, val fftBuffer: Array[Float])
+  private final class Impl(val config: Config, kernels: Array[Kernel], val fft: Fourier, val fftBuffer: Array[Double])
     extends ConstQ {
     //      private Kernel[]	kernels;
     //     	private int			numKernels;
@@ -152,10 +152,10 @@ object ConstQ {
 
     override def toString = s"ConstQ@${hashCode.toHexString}"
 
-    def getFrequency(kernel: Int): Float = kernels(kernel).freq
+    def getFrequency(kernel: Int): Double = kernels(kernel).freq
 
-    def transform(input: Array[Float], inLen: Int, out0: Array[Float], inOff: Int, outOff: Int): Array[Float] = {
-      val output = if (out0 == null) new Array[Float](numKernels) else out0
+    def transform(input: Array[Double], inLen: Int, out0: Array[Double], inOff: Int, outOff: Int): Array[Double] = {
+      val output = if (out0 == null) new Array[Double](numKernels) else out0
 
       //		gain *= TENBYLOG10;
       val off = fftSize >> 1
@@ -185,14 +185,14 @@ object ConstQ {
       convolve(output, outOff)
     }
 
-    def convolve(out0: Array[Float], outOff0: Int): Array[Float] = {
-      val output = if (out0 == null) new Array[Float](numKernels) else out0
+    def convolve(out0: Array[Double], outOff0: Int): Array[Double] = {
+      val output = if (out0 == null) new Array[Double](numKernels) else out0
 
       var k = 0; var outOff = outOff0; while (k < numKernels) {
         val kern = kernels(k)
         val data = kern.data
-        var f1 = 0f
-        var f2 = 0f
+        var f1 = 0.0
+        var f2 = 0.0
         var i = kern.offset; var j = 0; while (j < data.length) {
           // complex mult: a * b =
           // (re(a)re(b)-im(a)im(b))+i(re(a)im(b)+im(a)re(b))
@@ -234,11 +234,11 @@ object ConstQ {
     val config = if (config0.maxFreq <= fs / 2) config0
     else {
       val c = ConfigBuilder(config0)
-      c.maxFreq = (fs / 2).toFloat
+      c.maxFreq = (fs / 2).toDouble
       c.build
     }
 
-    val q           = (1 / (math.pow(2, 1.0 / config.bandsPerOct) - 1)).toFloat
+    val q           = (1 / (math.pow(2, 1.0 / config.bandsPerOct) - 1)).toDouble
     val numKernels  = getNumKernels(config.bandsPerOct, config.maxFreq, config.minFreq)
     val kernels     = new Array[Kernel](numKernels)
     //		cqKernels	= new float[ cqKernelNum ][];
@@ -250,7 +250,7 @@ object ConstQ {
     val fftSize     = math.min(config.maxFFTSize, Util.nextPowerOfTwo(math.ceil(maxKernLen).toInt))
     //		LNKORR_ADD	= -2 * Math.log( fftSize );
     val fftSizeC    = fftSize << 1
-    val fftBuf      = new Array[Float](fftSizeC)
+    val fftBuf      = new Array[Double](fftSizeC)
     val fft         = Fourier(fftSize, config.threading)
 
     //		thresh		= 0.0054f / fftLen; // for Hamming window
@@ -269,7 +269,7 @@ object ConstQ {
 
     var k = 0
     while (k < numKernels) {
-      val theorKernLen  = maxKernLen * math.pow(2, (-k).toDouble / config.bandsPerOct) // toFloat
+      val theorKernLen  = maxKernLen * math.pow(2, (-k).toDouble / config.bandsPerOct) // toDouble
       val kernelLen     = math.min(fftSize, math.ceil(theorKernLen).toInt)
       val kernelLenE    = kernelLen & ~1
       val win           = Window.Hamming.create(kernelLen)
@@ -314,9 +314,9 @@ object ConstQ {
         val cos   = math.cos(d1)
         val sin   = math.sin(d1) // Math.sqrt( 1 - cos*cos );
         val d2    = win(i) * weight
-        fftBuf(j) = (d2 * cos).toFloat; j += 1
+        fftBuf(j) = (d2 * cos).toDouble; j += 1
         //				fftBuf[ j++ ] = -f1 * sin;  // conj!
-        fftBuf(j) = (d2 * sin).toFloat; j += 1 // NORM!
+        fftBuf(j) = (d2 * sin).toDouble; j += 1 // NORM!
         if (j == fftSizeC) j = 0
         //            i += 1 }
         i -= 1
@@ -381,7 +381,7 @@ object ConstQ {
       }
 
       //System.out.println( "Kernel k : specStart " + specStart + "; specStop " + specStop + "; centerFreq " + centerFreq );
-      kernels(k) = new Kernel(specStart, new Array[Float](specStop - specStart), centerFreq.toFloat)
+      kernels(k) = new Kernel(specStart, new Array[Double](specStop - specStart), centerFreq.toDouble)
       System.arraycopy(fftBuf, specStart, kernels(k).data, 0, specStop - specStart)
       k += 1
     }
@@ -389,7 +389,7 @@ object ConstQ {
     new Impl(config, kernels, fft, fftBuf)
   }
 
-  private final class Kernel(val offset: Int, val data: Array[Float], val freq: Float)
+  private final class Kernel(val offset: Int, val data: Array[Double], val freq: Double)
 
 }
 
@@ -403,13 +403,13 @@ trait ConstQ {
   def fftSize: Int
 
   /** The buffer used to perform FFTs. */
-  def fftBuffer: Array[Float]
+  def fftBuffer: Array[Double]
 
   /** Queries a kernel frequency in Hertz.
     *
     * @param   kernel   the kernel index, from `0` up to and including `numKernels-1`
     */
-  def getFrequency(kernel: Int): Float
+  def getFrequency(kernel: Int): Double
 
   /** Transforms a time domain input signal to obtain the constant Q spectral coefficients.
     *
@@ -420,7 +420,7 @@ trait ConstQ {
     * @param outOff  the offset into the output buffer
     * @return  the output buffer which is useful when the argument was `null`
     */
-  def transform(input: Array[Float], inLen: Int, output: Array[Float], inOff: Int = 0, outOff: Int = 0): Array[Float]
+  def transform(input: Array[Double], inLen: Int, output: Array[Double], inOff: Int = 0, outOff: Int = 0): Array[Double]
 
   /** Assumes that the input was already successfully transformed
     * into the Fourier domain (namely into fftBuf as returned by
@@ -433,5 +433,5 @@ trait ConstQ {
     * @param outOff  the offset into the output buffer
     * @return  the output buffer which is useful when the argument was `null`
     */
-  def convolve(output: Array[Float], outOff: Int = 0): Array[Float]
+  def convolve(output: Array[Double], outOff: Int = 0): Array[Double]
 }

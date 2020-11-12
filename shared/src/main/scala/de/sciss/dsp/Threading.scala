@@ -14,7 +14,7 @@
 package de.sciss.dsp
 
 import de.sciss.serial.{ConstFormat, DataInput, DataOutput}
-import edu.emory.mathcs.utils.ConcurrencyUtils
+import de.sciss.transform4s.utils.ConcurrencyUtils
 
 import scala.annotation.switch
 

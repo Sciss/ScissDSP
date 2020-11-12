@@ -15,10 +15,11 @@ For project status, API and current version, visit [git.iem.at/sciss/ScissDSP](h
 
 ## building
 
-This project compiles with sbt against Scala 2.13, 2.12. The last version to support Scala 2.11 was v1.3.2.
+This project builds with sbt against Scala 2.13, 2.12, Dotty (JVM) and 2.13 (Scala.js).
+The last version to support Scala 2.11 was v1.3.2.
+
 The project depends
-on [JTransforms](https://sites.google.com/site/piotrwendykier/software/jtransforms) for the FFT. JTransforms provides 
-three licenses (MPL/LGPL/GPL) and is incorporated here based on the GNU LGPL.
+on [Transforms4s](https://github.com/Sciss/Transform4s) for the FFT.
 
 ## linking
 
@@ -26,7 +27,7 @@ The following artifact is necessary as dependency:
 
     libraryDependencies += "de.sciss" %% "scissdsp" % v
 
-The current version `v` is `"2.0.0"`
+The current version `v` is `"2.1.0"`
 
 ## contributing
 

@@ -18,12 +18,12 @@ package de.sciss.dsp
   */
 object Util {
   /** 2 * Pi (Outline of the unit circle) */
-  val Pi2  = math.Pi * 2
+  final val Pi2  = math.Pi * 2
 
   /** logarithmus naturalis of 2 */
-  val Ln2  = math.log( 2 )
+  final val Ln2  = math.log(2)
   /** logarithmus naturalis of 10 */
-  val Ln10 = math.log( 10 )
+  final val Ln10 = math.log(10)
 
   /** Decibel-to-Linear conversion.
     *
@@ -31,7 +31,7 @@ object Util {
     * @return volume linear, such that
     *         dBToLinear( -6 ) returns c. 0.5
     */
-  def dbamp(dB: Double): Double = math.exp(dB / 20 * Ln10)
+  def dbAmp(dB: Double): Double = math.exp(dB / 20 * Ln10)
 
   /** Linear-to-Decibel conversion
     *
@@ -39,7 +39,7 @@ object Util {
     * @return volume in decibals, such that
     *         linearToDB( 2.0 ) returns c. +6
     */
-  def ampdb(linear: Double): Double = math.log10(linear) * 20
+  def ampDb(linear: Double): Double = math.log10(linear) * 20
 
   /** Calculates the logarithm with base 2.
     *
@@ -52,7 +52,7 @@ object Util {
     * of two and is equal or greater than a given integer
     *
     * @param	value the minimum value to return
-    * @return		an integer 2^n which is equal or greater than x
+    * @return		an integer `2^n` which is equal or greater than x
     */
   def nextPowerOfTwo(value: Int): Int = {
     var y = 1
@@ -61,7 +61,7 @@ object Util {
   }
 
    /** Calculates energy of a signal (sum(x*x)). */
-   def calcEnergy(a: Array[Float], off: Int, length: Int): Double = {
+   def calcEnergy(a: Array[Double], off: Int, length: Int): Double = {
      var energy = 0.0
      val stop   = off + length
 

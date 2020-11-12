@@ -27,15 +27,15 @@ object Complex {
     * @param	srcOff	array offset, physical (complex offset << 1)
     * @param	length	complex length << 1
     */
-  def rect2Polar(src: Array[Float], srcOff: Int, dest: Array[Float], destOff: Int, length: Int): Unit = {
+  def rect2Polar(src: Array[Double], srcOff: Int, dest: Array[Double], destOff: Int, length: Int): Unit = {
     if ((src eq dest) && (srcOff < destOff)) {
       var i = srcOff + length
       var j = destOff + length
       while (i > srcOff) {
         i -= 1; val d1 = src(i)
         i -= 1; val d2 = src(i)
-        j -= 1; dest(j) = math.atan2(d1, d2).toFloat
-        j -= 1; dest(j) = math.sqrt(d1 * d1 + d2 * d2).toFloat
+        j -= 1; dest(j) = math.atan2(d1, d2)
+        j -= 1; dest(j) = math.sqrt(d1 * d1 + d2 * d2)
       }
     } else {
       var i = srcOff
@@ -44,8 +44,8 @@ object Complex {
       while (i < stop) {
         val d2 = src(i); i += 1
         val d1 = src(i); i += 1
-        dest(j) = math.sqrt(d1 * d1 + d2 * d2).toFloat; j += 1
-        dest(j) = math.atan2(d1, d2).toFloat; j += 1
+        dest(j) = math.sqrt(d1 * d1 + d2 * d2); j += 1
+        dest(j) = math.atan2(d1, d2); j += 1
       }
     }
   }
@@ -57,15 +57,15 @@ object Complex {
     * @param	srcOff	array offset, physical (complex offset << 1)
     * @param	length	complex length << 1
     */
-  def polar2Rect(src: Array[Float], srcOff: Int, dest: Array[Float], destOff: Int, length: Int): Unit = {
+  def polar2Rect(src: Array[Double], srcOff: Int, dest: Array[Double], destOff: Int, length: Int): Unit = {
     if ((src eq dest) && (srcOff < destOff)) {
       var i = srcOff + length
       var j = destOff + length
       while (i > srcOff) {
         i -=1; val d1 = src(i)
         i -=1; val d2 = src(i)
-        j -=1; dest(j) = (d2 * math.sin(d1)).toFloat
-        j -=1; dest(j) = (d2 * math.cos(d1)).toFloat
+        j -=1; dest(j) = d2 * math.sin(d1)
+        j -=1; dest(j) = d2 * math.cos(d1)
       }
     } else {
       var i = srcOff
@@ -74,8 +74,8 @@ object Complex {
       while (i < stop) {
         val d2 = src(i); i += 1
         val d1 = src(i); i += 1
-        dest(j) = (d2 * math.cos(d1)).toFloat; j += 1
-        dest(j) = (d2 * math.sin(d1)).toFloat; j += 1
+        dest(j) = d2 * math.cos(d1); j += 1
+        dest(j) = d2 * math.sin(d1); j += 1
       }
     }
   }
@@ -89,8 +89,8 @@ object Complex {
     * @param	dest	  kann identisch mit *einem* src sein (in-place)
     * @param	length	complex length << 1
     */
-  def complexMult(src1: Array[Float], srcOff1: Int, src2: Array[Float], srcOff2: Int,
-                  dest: Array[Float], destOff: Int, length: Int): Unit = {
+  def complexMult(src1: Array[Double], srcOff1: Int, src2: Array[Double], srcOff2: Int,
+                  dest: Array[Double], destOff: Int, length: Int): Unit = {
     if (((src1 eq dest) && (srcOff1 < destOff)) || ((src2 eq dest) && (srcOff2 < destOff))) {
       var i = srcOff1 + length
       var j = srcOff2 + length
@@ -127,7 +127,7 @@ object Complex {
     * @param	srcOff	array offset, physical (complex offset << 1)
     * @param	length	complex length << 1
     */
-  def unwrapPhases(src: Array[Float], srcOff: Int, dest: Array[Float], destOff: Int, length: Int): Unit = {
+  def unwrapPhases(src: Array[Double], srcOff: Int, dest: Array[Double], destOff: Int, length: Int): Unit = {
     var i     = srcOff + 1
     var j     = destOff + 1
     var k     = 0
@@ -143,7 +143,7 @@ object Complex {
         k += 1
         d3 = k * Pi2
       }
-      dest(j) = (d2 + d3).toFloat
+      dest(j) = d2 + d3
       d1 = d2
 
       i += 2
@@ -160,7 +160,7 @@ object Complex {
     * @param	srcOff	array offset, physical (complex offset << 1)
     * @param	length	complex length << 1
     */
-  def wrapPhases(src: Array[Float], srcOff: Int, dest: Array[Float], destOff: Int, length: Int): Unit = {
+  def wrapPhases(src: Array[Double], srcOff: Int, dest: Array[Double], destOff: Int, length: Int): Unit = {
     var i = srcOff + 1
     var j = destOff + 1
     var k = 0
@@ -176,7 +176,7 @@ object Complex {
         k -= 1
         d3 = k * Pi2
       }
-      dest(j) = (d2 - d3).toFloat
+      dest(j) = d2 - d3
 
       i += 2
       j += 2

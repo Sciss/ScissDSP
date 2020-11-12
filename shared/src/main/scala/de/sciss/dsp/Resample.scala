@@ -27,15 +27,15 @@ object Resample {
   private final class Impl(val quality: Quality) extends Resample {
     private val fltSmpPerCrossing = 4096
     private val fltLen            = ((fltSmpPerCrossing * quality.zeroCrossings) / quality.rollOff + 0.5).toInt
-    private val flt               = new Array[Float](fltLen)
-    private val fltD              = null: Array[Float]
+    private val flt               = new Array[Double](fltLen)
+    private val fltD              = null: Array[Double]
 
     // XXX TODO interpolation vector
     private val gain = WindowedSincFilter.createAntiAliasFilter(
       flt, fltD, halfWinSize = fltLen, samplesPerCrossing = fltSmpPerCrossing, rollOff = quality.rollOff,
       kaiserBeta = quality.kaiserBeta)
 
-    def process(src: Array[Float], srcOff: Double, dest: Array[Float], destOff0: Int,
+    def process(src: Array[Double], srcOff: Double, dest: Array[Double], destOff0: Int,
                 length: Int, factor: Double): Unit = {
       val smpIncr = 1.0 / factor
       var phase   = srcOff
@@ -78,7 +78,7 @@ object Resample {
             fltOffI  = (fltOff + 0.5).toInt
           }
 
-          dest(destOff) = (value * rsmpGain).toFloat
+          dest(destOff) = (value * rsmpGain).toDouble
           destOff += 1
           i += 1
           phase = srcOff + i * smpIncr
@@ -110,7 +110,7 @@ object Resample {
             fltOffI  = fltOff.toInt
           }
 
-          dest(destOff) = (value * rsmpGain).toFloat
+          dest(destOff) = (value * rsmpGain).toDouble
           destOff += 1
           i += 1
           phase = srcOff + i * smpIncr
@@ -128,5 +128,5 @@ trait Resample {
     * @param	length		bzgl. dest!! src muss laenge 'length/factor' aufgerundet haben!!
     * @param	factor		dest-smpRate/src-smpRate
     */
-  def process(src: Array[Float], srcOff: Double, dest: Array[Float], destOff: Int, length: Int, factor: Double): Unit
+  def process(src: Array[Double], srcOff: Double, dest: Array[Double], destOff: Int, length: Int, factor: Double): Unit
 }

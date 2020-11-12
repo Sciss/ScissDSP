@@ -21,24 +21,24 @@ object WindowedSincFilter {
 
 // -------- public Methoden --------
 
-  /** @param	impResp				Ziel-Array der Groesse 'halfWinSize' fuer Impulsantwort
-    * @param	freq				   Grenzfrequenz
-    * @param	halfWinSize			Groesse des Kaiser-Fensters geteilt durch zwei
-    * @param	kaiserBeta			Parameter fuer Kaiser-Fenster
-    * @param	samplesPerCrossing	Zahl der Koeffizienten pro Periode
+  /** @param	impResp				      target array of size 'halfWinSize' for impulse response
+    * @param	freq				        cut-off frequency
+    * @param	halfWinSize			    size of Kaiser window divided by two
+    * @param	kaiserBeta			    Kaiser window parameter
+    * @param	samplesPerCrossing	number of coefficients per period
     */
-  def createLPF(impResp: Array[Float], freq: Double, halfWinSize: Int, kaiserBeta: Double,
+  def createLPF(impResp: Array[Double], freq: Double, halfWinSize: Int, kaiserBeta: Double,
                 samplesPerCrossing: Int = DefaultSamplesPerCrossing): Unit = {
     val dNum		   = samplesPerCrossing.toDouble
     val smpRate		= freq * 2.0
     val normFactor	= 1.0 / (halfWinSize - 1)
 
     // ideal lpf = infinite sinc-function; create truncated version
-    impResp(0) = smpRate.toFloat
+    impResp(0) = smpRate.toDouble
     var i = 1
     while (i < halfWinSize) {
       val d = Pi * i / dNum
-      impResp(i) = (math.sin( smpRate * d ) / d).toFloat
+      impResp(i) = math.sin( smpRate * d ) / d
       i += 1
     }
 
@@ -47,7 +47,7 @@ object WindowedSincFilter {
     i = 1
     while	(i < halfWinSize) {
       val d = i * normFactor
-      impResp(i) *= (calcBesselZero( kaiserBeta * math.sqrt( 1.0 - d*d )) * iBeta).toFloat
+      impResp(i) *= calcBesselZero(kaiserBeta * math.sqrt(1.0 - d * d)) * iBeta
       i += 1
     }
   }
@@ -62,7 +62,7 @@ object WindowedSincFilter {
     *
     * @return	Gain-Wert (abs amp), der den LPF bedingten Lautstaerkeverlust ausgleichen wuerde
     */
-  def createAntiAliasFilter(impResp: Array[Float], impRespD: Array[Float], halfWinSize: Int, rollOff: Double,
+  def createAntiAliasFilter(impResp: Array[Double], impRespD: Array[Double], halfWinSize: Int, rollOff: Double,
                             kaiserBeta: Double, samplesPerCrossing: Int = DefaultSamplesPerCrossing): Double = {
 
     createLPF(impResp, 0.5 * rollOff, halfWinSize, kaiserBeta, samplesPerCrossing)

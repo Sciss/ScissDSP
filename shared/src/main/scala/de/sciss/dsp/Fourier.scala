@@ -13,7 +13,7 @@
 
 package de.sciss.dsp
 
-import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
+import de.sciss.transform4s.fft.DoubleFFT_1D
 
 object Fourier {
   def apply(size: Int, threading: Threading = Threading.Multi): Fourier = new Impl(size, threading)
@@ -23,35 +23,35 @@ object Fourier {
   case object Inverse extends Direction
 
   private final class Impl(val size: Int, val threading: Threading) extends Fourier {
-    private val fft = new FloatFFT_1D(size)
+    private val fft = DoubleFFT_1D(size)
 
     override def toString = s"Fourier(size = $size)@${hashCode.toHexString}"
 
-    def complexTransform(a: Array[Float], dir: Direction): Unit =
+    def complexTransform(a: Array[Double], dir: Direction): Unit =
       if (dir eq Forward) {
         complexForward(a)
       } else {
         complexInverse(a)
       }
 
-    def complexForward(a: Array[Float]): Unit = {
-      threading.setJTransforms() // not nice... would be better if this was an option in FloatFFT_1D directly...
+    def complexForward(a: Array[Double]): Unit = {
+      threading.setJTransforms() // not nice... would be better if this was an option in DoubleFFT_1D directly...
       fft.complexForward(a)
     }
 
-    def complexInverse(a: Array[Float]): Unit = {
+    def complexInverse(a: Array[Double]): Unit = {
       threading.setJTransforms()
-      fft.complexInverse(a, true)
+      fft.complexInverse(a, scale = true)
     }
 
-    def realTransform(a: Array[Float], dir: Direction): Unit =
+    def realTransform(a: Array[Double], dir: Direction): Unit =
       if (dir eq Forward) {
         realForward(a)
       } else {
         realInverse(a)
       }
 
-    def realForward(a: Array[Float]): Unit = {
+    def realForward(a: Array[Double]): Unit = {
       threading.setJTransforms()
       fft.realForward(a)
       a(size    ) = a(1)
@@ -63,7 +63,7 @@ object Fourier {
       //         a( size )      = h1Re - h1Im				//   to get them all within the original array.
     }
 
-    def realInverse(a: Array[Float]): Unit = {
+    def realInverse(a: Array[Double]): Unit = {
       //         val h1Re       = a( 0 )
       //         val hhRe       = a( size )
       //         a( 0 )         = 0.5f * (h1Re + hhRe)
@@ -72,7 +72,7 @@ object Fourier {
       a(size    ) = 0f
       a(size + 1) = 0f
       threading.setJTransforms()
-      fft.realInverse(a, true)
+      fft.realInverse(a, scale = true)
     }
   }
 }
@@ -92,10 +92,10 @@ trait Fourier {
     *                imaginary part in a[ 1, 3, ... 2 * len -1 ]
     * @param   dir   either `Fourier.Inverse` or `Fourier.Forward`
     */
-  def complexTransform(a: Array[Float], dir: Direction): Unit
+  def complexTransform(a: Array[Double], dir: Direction): Unit
 
-  def complexForward(a: Array[Float]): Unit
-  def complexInverse(a: Array[Float]): Unit
+  def complexForward(a: Array[Double]): Unit
+  def complexInverse(a: Array[Double]): Unit
 
   /** One-dimensional discrete real fourier transform.
     * Replaces `a[ 0...len ]` by its discrete Fourier transform
@@ -108,8 +108,8 @@ trait Fourier {
     *                imaginary part in a[ 1, 3, ... len + 1 ].
     * @param   dir   use <code>INVERSE</code> or <code>FORWARD</code>
     */
-  def realTransform(a: Array[Float], dir: Direction): Unit
+  def realTransform(a: Array[Double], dir: Direction): Unit
 
-  def realForward(a: Array[Float]): Unit
-  def realInverse(a: Array[Float]): Unit
+  def realForward(a: Array[Double]): Unit
+  def realInverse(a: Array[Double]): Unit
 }
