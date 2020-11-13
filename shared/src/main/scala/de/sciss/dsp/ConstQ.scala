@@ -4,7 +4,7 @@
  *
  * Copyright (c) 2001-2020 Hanns Holger Rutz. All rights reserved.
  *
- * This software is published under the GNU Lesser General Public License v2.1+
+ * This software is published under the GNU Affero General Public License v3+
  *
  *
  * For further information, please contact Hanns Holger Rutz at
@@ -51,7 +51,7 @@ object ConstQ {
 
     def apply(): ConfigBuilder = new ConfigBuilderImpl
 
-    private final val COOKIE  = 0x4352
+    private final val COOKIE  = 0x4352  // was "CQ"
 
     implicit object format extends ConstFormat[Config] {
       def write(v: Config, out: DataOutput): Unit = {
@@ -61,8 +61,8 @@ object ConstQ {
         out.writeDouble(minFreq)
         out.writeDouble(maxFreq)
         out.writeDouble(maxTimeRes)
-        out.writeShort(maxFFTSize)
-        out.writeShort(bandsPerOct)
+        out.writeInt(maxFFTSize)
+        out.writeInt(bandsPerOct)
         Threading.format.write(threading, out)
       }
 
@@ -73,8 +73,8 @@ object ConstQ {
         val minFreq     = in.readDouble()
         val maxFreq     = in.readDouble()
         val maxTimeRes  = in.readDouble()
-        val maxFFTSize  = in.readShort()
-        val bandsPerOct = in.readShort()
+        val maxFFTSize  = in.readInt()
+        val bandsPerOct = in.readInt()
         val threading   = Threading.format.read(in)
         ConfigImpl(sampleRate = sampleRate, minFreq = minFreq, maxFreq = maxFreq, maxTimeRes = maxTimeRes,
           maxFFTSize = maxFFTSize, bandsPerOct = bandsPerOct, threading = threading)
@@ -100,13 +100,13 @@ object ConstQ {
   }
 
   sealed trait ConfigBuilder extends ConfigLike {
-    var sampleRate: Double
-    var minFreq: Double
-    var maxFreq: Double
-    var maxTimeRes: Double
-    var maxFFTSize: Int
-    var bandsPerOct: Int
-    var threading: Threading
+    var sampleRate  : Double
+    var minFreq     : Double
+    var maxFreq     : Double
+    var maxTimeRes  : Double
+    var maxFFTSize  : Int
+    var bandsPerOct : Int
+    var threading   : Threading
 
     def build: Config
   }
@@ -115,13 +115,13 @@ object ConstQ {
     override def toString = s"ConstQ.ConfigBuilder@${hashCode.toHexString}"
 
     // rather moderate defaults with 55 Hz, 8ms spacing, 4096 FFT...
-    var sampleRate    = 44100.0
-    var minFreq       = 55f
-    var maxFreq       = 20000f
-    var maxTimeRes    = 8f
-    var bandsPerOct   = 24
-    var maxFFTSize    = 4096
-    var threading     = Threading.Multi: Threading
+    var sampleRate : Double     = 44100.0
+    var minFreq    : Double     = 55.0
+    var maxFreq    : Double     = 20000.0
+    var maxTimeRes : Double     = 8.0
+    var bandsPerOct: Int        = 24
+    var maxFFTSize : Int        = 4096
+    var threading  : Threading  = Threading.Multi
 
     def build: Config = ConfigImpl(sampleRate, minFreq, maxFreq, maxTimeRes, maxFFTSize, bandsPerOct, threading)
   }

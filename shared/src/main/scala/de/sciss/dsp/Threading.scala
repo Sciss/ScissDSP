@@ -4,7 +4,7 @@
  *
  * Copyright (c) 2001-2020 Hanns Holger Rutz. All rights reserved.
  *
- * This software is published under the GNU Lesser General Public License v2.1+
+ * This software is published under the GNU Affero General Public License v3+
  *
  *
  * For further information, please contact Hanns Holger Rutz at
@@ -46,25 +46,27 @@ object Threading {
     }
   }
 
-  /** Use the optimal number of threads (equal to the number of cores reported for the CPU). */
+  /** Use the optimal number of threads (equal to the number of cores reported for the CPU).
+    * This is ok for Scala.js, as reported number of processors is one.
+    */
   case object Multi extends Threading {
-    private[dsp] def setJTransforms(): Unit =
-      ConcurrencyUtils.setNumberOfThreads(ConcurrencyUtils.getNumberOfProcessors)
+    private[dsp] def confiureTransform4s(): Unit =
+      ConcurrencyUtils.numThreads = ConcurrencyUtils.numProcessors
   }
 
   /** Use only single threaded processing. */
   case object Single extends Threading {
-    private[dsp] def setJTransforms(): Unit =
-      ConcurrencyUtils.setNumberOfThreads(1)
+    private[dsp] def confiureTransform4s(): Unit =
+      ConcurrencyUtils.numThreads = 1
   }
 
   /** Use a custom number of threads. */
   final case class Custom(numThreads: Int) extends Threading {
-    private[dsp] def setJTransforms(): Unit =
-      ConcurrencyUtils.setNumberOfThreads(numThreads)
+    private[dsp] def confiureTransform4s(): Unit =
+      ConcurrencyUtils.numThreads = numThreads
   }
 }
 
 sealed trait Threading {
-  private[dsp] def setJTransforms(): Unit
+  private[dsp] def confiureTransform4s(): Unit
 }

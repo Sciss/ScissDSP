@@ -1,13 +1,13 @@
 lazy val baseName  = "ScissDSP"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "2.1.0-SNAPSHOT"
+lazy val projectVersion = "2.1.0"
 lazy val mimaVersion    = "2.1.0"
 
 lazy val deps = new {
   val main = new {
     // val jtransforms = "2.4.0"
-    val transform4s = "0.1.0-SNAPSHOT"
+    val transform4s = "0.1.0"
     val serial      = "2.0.0"
   }
   val test = new {
@@ -28,7 +28,7 @@ lazy val root = crossProject(JSPlatform, JVMPlatform).in(file("."))
     organization       := "de.sciss",
     description        := "Collection of DSP algorithms and components for Scala",
     homepage           := Some(url(s"https://git.iem.at/sciss/${name.value}")),
-    licenses           := Seq("LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")),
+    licenses           := Seq("AGPL v3+" -> url("http://www.gnu.org/licenses/agpl-3.0.txt")),
     scalaVersion       := "2.13.3",
     mimaPreviousArtifacts := Set("de.sciss" %% baseNameL % mimaVersion),
     libraryDependencies ++= Seq(

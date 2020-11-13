@@ -4,7 +4,7 @@
  *
  * Copyright (c) 2001-2020 Hanns Holger Rutz. All rights reserved.
  *
- * This software is published under the GNU Lesser General Public License v2.1+
+ * This software is published under the GNU Affero General Public License v3+
  *
  *
  * For further information, please contact Hanns Holger Rutz at
@@ -60,10 +60,10 @@ object MFCC {
         import v._
         out.writeShort(COOKIE)
         out.writeDouble(sampleRate)
-        out.writeShort(numCoeff)
+        out.writeInt(numCoeff)
         out.writeDouble(minFreq)
         out.writeDouble(maxFreq)
-        out.writeShort(numFilters)
+        out.writeInt(numFilters)
         out.writeInt(fftSize)
         out.writeBoolean(preEmphasis)
         Threading.format.write(threading, out)
@@ -73,10 +73,10 @@ object MFCC {
         val cookie = in.readShort()
         require(cookie == COOKIE, s"Unexpected cookie $cookie")
         val sampleRate      = in.readDouble()
-        val numCoeff        = in.readShort()
+        val numCoeff        = in.readInt()
         val minFreq         = in.readDouble()
         val maxFreq         = in.readDouble()
-        val numFilters      = in.readShort()
+        val numFilters      = in.readInt()
         val fftSize         = in.readInt()
         val preEmphasis     = in.readBoolean()
         val threading       = Threading.format.read(in)
@@ -123,14 +123,14 @@ object MFCC {
     override def toString = s"MFCC.ConfigBuilder@${hashCode.toHexString}"
 
     // rather moderate defaults with 55 Hz, 8ms spacing, 4096 FFT...
-    var sampleRate            = 44100.0
-    var numCoeff              = 13
-    var minFreq               = 55.0
-    var maxFreq               = 20000.0
-    var numFilters            = 42  // Tiwari used 30 for speech, we use SuperCollider's 42 default
-    var fftSize               = 1024
-    var preEmphasis           = false
-    var threading: Threading  = Threading.Multi
+    var sampleRate  : Double    = 44100.0
+    var numCoeff    : Int       = 13
+    var minFreq     : Double    = 55.0
+    var maxFreq     : Double    = 20000.0
+    var numFilters  : Int       = 42  // Tiwari used 30 for speech, we use SuperCollider's 42 default
+    var fftSize     : Int       = 1024
+    var preEmphasis : Boolean   = false
+    var threading   : Threading = Threading.Multi
 
     def build: Config = ConfigImpl(sampleRate, numCoeff = numCoeff,
       minFreq = minFreq, maxFreq = maxFreq, numFilters = numFilters,

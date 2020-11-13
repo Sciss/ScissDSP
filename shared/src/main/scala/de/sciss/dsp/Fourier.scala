@@ -4,7 +4,7 @@
  *
  * Copyright (c) 2001-2020 Hanns Holger Rutz. All rights reserved.
  *
- * This software is published under the GNU Lesser General Public License v2.1+
+ * This software is published under the GNU Affero General Public License v3+
  *
  *
  * For further information, please contact Hanns Holger Rutz at
@@ -35,12 +35,12 @@ object Fourier {
       }
 
     def complexForward(a: Array[Double]): Unit = {
-      threading.setJTransforms() // not nice... would be better if this was an option in DoubleFFT_1D directly...
+      threading.confiureTransform4s() // not nice... would be better if this was an option in DoubleFFT_1D directly...
       fft.complexForward(a)
     }
 
     def complexInverse(a: Array[Double]): Unit = {
-      threading.setJTransforms()
+      threading.confiureTransform4s()
       fft.complexInverse(a, scale = true)
     }
 
@@ -52,7 +52,7 @@ object Fourier {
       }
 
     def realForward(a: Array[Double]): Unit = {
-      threading.setJTransforms()
+      threading.confiureTransform4s()
       fft.realForward(a)
       a(size    ) = a(1)
       a(1       ) = 0f
@@ -71,7 +71,7 @@ object Fourier {
       a(1       ) = a(size)
       a(size    ) = 0f
       a(size + 1) = 0f
-      threading.setJTransforms()
+      threading.confiureTransform4s()
       fft.realInverse(a, scale = true)
     }
   }
