@@ -42,14 +42,14 @@ object Window {
   case object Hamming extends Parameterless {
     val id = 0
 
-    def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
-      val win         = if (a == null) new Array[Float](len) else a
+    def fill(a: Array[Double], off: Int, len: Int): Array[Double] = {
+      val win         = if (a == null) new Array[Double](len) else a
       val normFactor  = Pi2 / len
       var i = 0
       var j = off
       while (i < len) {
         val d  = i * normFactor + Pi
-        win(j) = (0.54 + 0.46 * math.cos(d)).toFloat
+        win(j) = 0.54 + 0.46 * math.cos(d)
         i += 1
         j += 1
       }
@@ -60,33 +60,20 @@ object Window {
   case object Blackman extends Parameterless {
     val id = 1
 
-    def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
-      val win         = if (a == null) new Array[Float](len) else a
+    def fill(a: Array[Double], off: Int, len: Int): Array[Double] = {
+      val win         = if (a == null) new Array[Double](len) else a
       val normFactor  = Pi2 / len
       var i = 0
       var j = off
       while (i < len) {
         val d  = i * normFactor + Pi
-        win(j) = (0.42 + 0.5 * math.cos(d) + 0.08 * math.cos(2 * d)).toFloat
+        win(j) = 0.42 + 0.5 * math.cos(d) + 0.08 * math.cos(2 * d)
         i += 1
         j += 1
       }
       win
     }
   }
-
-  //   object Kaiser {
-  //      def apply( beta: Double ) : Kaiser = new Impl( beta )
-  //      def unapply( fun: Function ) : Option[ Double ] = {
-  //         if( fun.isInstanceOf[ Kaiser ]) Some( fun.asInstanceOf[ Kaiser ].beta ) else None
-  //      }
-  //
-  //      private final class Impl( val beta: Double ) extends Kaiser {
-  //         override def equals( that: Any ) = that != null && that.isInstanceOf[ Kaiser ] && {
-  //            val k = that.asInstanceOf[ Kaiser ]; k.beta == beta
-  //         }
-  //      }
-  //   }
 
   final case class Kaiser(beta: Double) extends Window {
     def param: Double = beta
@@ -95,15 +82,15 @@ object Window {
 
     override def toString = s"Kaiser \u03B2=$beta"
 
-    def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
-      val win         = if (a == null) new Array[Float](len) else a
+    def fill(a: Array[Double], off: Int, len: Int): Array[Double] = {
+      val win         = if (a == null) new Array[Double](len) else a
       val normFactor  = 2.0 / len
       val iBeta       = 1.0 / calcBesselZero(beta)
       var i = 0
       var j = off
       while (i < len) {
         val d = i * normFactor - 1
-        win(j) = (calcBesselZero(beta * math.sqrt(1.0 - d * d)) * iBeta).toFloat
+        win(j) = calcBesselZero(beta * math.sqrt(1.0 - d * d)) * iBeta
         i += 1
         j += 1
       }
@@ -112,16 +99,16 @@ object Window {
     }
   }
 
-  val Kaiser4 = Kaiser(4.0)
-  val Kaiser5 = Kaiser(5.0)
-  val Kaiser6 = Kaiser(6.0)
-  val Kaiser8 = Kaiser(8.0)
+  val Kaiser4: Kaiser = Kaiser(4.0)
+  val Kaiser5: Kaiser = Kaiser(5.0)
+  val Kaiser6: Kaiser = Kaiser(6.0)
+  val Kaiser8: Kaiser = Kaiser(8.0)
 
   case object Rectangle extends Parameterless {
     val id = 3
 
-    def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
-      val win = if (a == null) new Array[Float](len) else a
+    def fill(a: Array[Double], off: Int, len: Int): Array[Double] = {
+      val win = if (a == null) new Array[Double](len) else a
       val stop = off + len
       var j = off
       while (j < stop) {
@@ -135,14 +122,14 @@ object Window {
   case object Hanning extends Parameterless {
     val id = 4
 
-    def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
-      val win         = if (a == null) new Array[Float](len) else a
+    def fill(a: Array[Double], off: Int, len: Int): Array[Double] = {
+      val win         = if (a == null) new Array[Double](len) else a
       val normFactor  = Pi2 / len
       var i = 0
       var j = off
       while (i < len) {
         val d = i * normFactor + Pi
-        win(j) = (0.5 + 0.5 * math.cos(d)).toFloat
+        win(j) = 0.5 + 0.5 * math.cos(d)
         i += 1
         j += 1
       }
@@ -153,14 +140,14 @@ object Window {
   case object Triangle extends Parameterless {
     val id = 5
 
-    def fill(a: Array[Float], off: Int, len: Int): Array[Float] = {
-      val win         = if (a == null) new Array[Float](len) else a
+    def fill(a: Array[Double], off: Int, len: Int): Array[Double] = {
+      val win         = if (a == null) new Array[Double](len) else a
       val normFactor  = 2.0 / len
       var i = 0
       var j = off
       while (j < len) {
         val d = i * normFactor - 1
-        win(j) = (1.0 - math.abs(d)).toFloat
+        win(j) = 1.0 - math.abs(d)
         i += 1
         j += 1
       }
@@ -180,7 +167,7 @@ object Window {
       d2 *= d1 * d1
       sum += d2
 
-      (d2 >= sum * 1e-21) // precision is 20 decimal digits
+      d2 >= sum * 1e-21 // precision is 20 decimal digits
     }) ()
 
     sum
@@ -192,7 +179,7 @@ sealed trait Window {
 
   def param: Double
 
-  final def create(len: Int): Array[Float] = fill(null, 0, len)
+  final def create(len: Int): Array[Double] = fill(null, 0, len)
 
-  def fill(a: Array[Float], off: Int, len: Int): Array[Float]
+  def fill(a: Array[Double], off: Int, len: Int): Array[Double]
 }
