@@ -27,7 +27,7 @@ The following artifact is necessary as dependency:
 
     libraryDependencies += "de.sciss" %% "scissdsp" % v
 
-The current version `v` is `"2.2.0"`
+The current version `v` is `"2.2.1"`
 
 ## contributing
 
