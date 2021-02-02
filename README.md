@@ -1,12 +1,12 @@
 # ScissDSP
 
-[![Build Status](https://travis-ci.org/Sciss/ScissDSP.svg?branch=main)](https://travis-ci.org/Sciss/ScissDSP)
+[![Build Status](https://github.com/Sciss/ScissDSP/workflows/Scala%20CI/badge.svg?branch=main)](https://github.com/Sciss/ScissDSP/actions?query=workflow%3A%22Scala+CI%22)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/scissdsp_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/scissdsp_2.13)
 
 ## statement
 
 ScissDSP is a collection of Digital Signal Processing (DSP) components for the Scala programming language. It
-is (C)opyright 2001&ndash;2020 by Hanns Holger Rutz. All rights reserved.
+is (C)opyright 2001&ndash;2021 by Hanns Holger Rutz. All rights reserved.
 
 ScissDSP is released under the [GNU Affero General Public License](https://git.iem.at/sciss/ScissDSP/raw/main/LICENSE) v3+
 and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`.
@@ -27,7 +27,7 @@ The following artifact is necessary as dependency:
 
     libraryDependencies += "de.sciss" %% "scissdsp" % v
 
-The current version `v` is `"2.2.1"`
+The current version `v` is `"2.2.2"`
 
 ## contributing
 

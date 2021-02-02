@@ -1,23 +1,23 @@
 lazy val baseName  = "ScissDSP"
 lazy val baseNameL = baseName.toLowerCase
 
-lazy val projectVersion = "2.2.1"
+lazy val projectVersion = "2.2.2"
 lazy val mimaVersion    = "2.2.0"
 
 lazy val deps = new {
   val main = new {
     // val jtransforms = "2.4.0"
     val transform4s = "0.1.1"
-    val serial      = "2.0.0"
+    val serial      = "2.0.1"
   }
   val test = new {
     val scalaTest   = "3.2.3"
-    val audioFile   = "2.3.2"
+    val audioFile   = "2.3.3"
   }
 }
 
 lazy val commonJvmSettings = Seq(
-  crossScalaVersions := Seq("3.0.0-M2", "2.13.4", "2.12.12"),
+  crossScalaVersions := Seq("3.0.0-M3", "2.13.4", "2.12.13"),
 )
 
 // sonatype plugin requires that these are in global
