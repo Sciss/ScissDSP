@@ -11,13 +11,13 @@ lazy val deps = new {
     val serial      = "2.0.1"
   }
   val test = new {
-    val scalaTest   = "3.2.4"
+    val scalaTest   = "3.2.7"
     val audioFile   = "2.3.3"
   }
 }
 
 lazy val commonJvmSettings = Seq(
-  crossScalaVersions := Seq("3.0.0-RC1", "2.13.4", "2.12.13"),
+  crossScalaVersions := Seq("3.0.0-RC2", "2.13.5", "2.12.13"),
 )
 
 // sonatype plugin requires that these are in global
@@ -33,7 +33,7 @@ lazy val root = crossProject(JSPlatform, JVMPlatform).in(file("."))
     description        := "Collection of DSP algorithms and components for Scala",
     homepage           := Some(url(s"https://git.iem.at/sciss/${name.value}")),
     licenses           := Seq("AGPL v3+" -> url("http://www.gnu.org/licenses/agpl-3.0.txt")),
-    scalaVersion       := "2.13.4",
+    scalaVersion       := "2.13.5",
     mimaPreviousArtifacts := Set("de.sciss" %% baseNameL % mimaVersion),
     libraryDependencies ++= Seq(
       // "net.sourceforge.jtransforms" %  "jtransforms"    % deps.main.jtransforms,
